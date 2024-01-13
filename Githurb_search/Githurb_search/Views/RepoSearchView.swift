@@ -6,49 +6,55 @@
 //
 
 import SwiftUI
+import ComposableArchitecture
 
 struct RepoSearchView: View {
-    @State private var keyword: String = ""
-    @State private var searchResult = [String]()
+    let store: StoreOf<RepoSearch>
     
-    private let sampleRepoList = [
-        "Swift",
-        "SwiftJson",
-        "SwaftCollection",
-        "SwiftSFsymbol",
-        "SwiftData",
-        "CoreData",
-    ]
     var body: some View {
-        NavigationView {
-            VStack {
-                HStack {
-                    TextField("Search repo", text: $keyword)
-                        .textFieldStyle(.roundedBorder)
-                    
-                    Button {
+        WithViewStore(self.store, observe: { $0 }) { viewStore in
+            NavigationView {
+                VStack {
+                    HStack {
+                        TextField(
+                            "Search repo",
+                            text: Binding(
+                                get: { viewStore.keyword },
+                                set: {
+                                    viewStore.send(.keywordChange($0))
+                                }
+                            )
+                        )
+                            .textFieldStyle(.roundedBorder)
                         
-                    } label: {
-                        Text("search")
+                        Button {
+                            viewStore.send(.search)
+                        } label: {
+                            Text("search")
+                        }
+                    }
+                    .padding(.top, 20)
+                    
+                    Spacer()
+                    
+                    List {
+                        ForEach(viewStore.searchResult, id: \.self) { repo in
+                            Text(repo)
+                        }
                     }
                 }
-                .padding(.top, 20)
-                
-                Spacer()
-                
-                List {
-                    ForEach(sampleRepoList, id: \.self) { repo in
-                        Text(repo)
-                    }
-                }
+                .navigationTitle("Githurb Search")
             }
-            .navigationTitle("Githurb Search")
+            .padding(.leading, 10)
+            .padding(.trailing, 10)
         }
-        .padding(.leading, 10)
-        .padding(.trailing, 10)
     }
 }
 
 #Preview {
-    RepoSearchView()
+    RepoSearchView(
+        store: Store(initialState: RepoSearch.State()) {
+            RepoSearch()
+        }
+    )
 }

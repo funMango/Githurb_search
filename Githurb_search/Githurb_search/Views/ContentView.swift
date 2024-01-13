@@ -6,10 +6,15 @@
 //
 
 import SwiftUI
+import ComposableArchitecture
 
 struct ContentView: View {
     var body: some View {
-        RepoSearchView()
+        RepoSearchView(
+            store: Store(initialState: RepoSearch.State()) {
+                RepoSearch()
+            }
+        )
     }
 }
 

@@ -23,6 +23,7 @@ struct RepoSearch {
         var keyword = ""
         var searchResult = [String]()
     }
+    
     enum Action {
         case keywordChange(String)
         case search
@@ -41,4 +42,20 @@ struct RepoSearch {
             return .none
         }
     }
+    
+//    var body: some Reducer<State, Action> {
+//        Reduce { state, action in
+//            switch action {
+//            case let .keywordChange(keyword):
+//                state.keyword = keyword
+//                return .none
+//                
+//            case .search:
+//                state.searchResult = self.sampleRepoList.filter {
+//                    $0.contains(state.keyword)
+//                }
+//                return .none
+//            }
+//        }
+//    }
 }
